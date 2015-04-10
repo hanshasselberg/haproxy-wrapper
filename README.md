@@ -4,6 +4,8 @@ HAProxy doesn't support reloading the configuration, it needs to be restarted in
 
 My hope is that this becomes a thing ppl like me find easily and saves them hours of research.
 
+This wrapper accepts `SIGHUB` and reloads HAProxy properly. Anything that kills the wrapper also kills HAProxy. It shall not surprise you!
+
 ## Usage
 
 ```
