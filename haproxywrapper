@@ -4,7 +4,7 @@
 
 if [ $# -ne 2 ]; then
   echo "Please provide pid_path and config_path"
-  exit 0
+  exit 1
 fi
 
 function starthaproxy {
