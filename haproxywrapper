@@ -38,6 +38,4 @@ starthaproxy $pid_path $config_path
 trap "reloadhaproxy" SIGHUP
 trap "stophaproxy" EXIT
 
-while true; do
-  sleep 0.2
-done
+while true; do sleep 0.2; done
