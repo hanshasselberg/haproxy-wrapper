@@ -1,0 +1,43 @@
+#!/bin/bash
+# borrows from https://gist.github.com/gfrey/8472007 and
+# https://github.com/dynport/urknall/blob/master/examples/tpl_haproxy.go#L44.
+
+if [ $# -ne 2 ]; then
+  echo "Please provide pid_path and config_path"
+  exit 0
+fi
+
+function starthaproxy {
+  haproxy -p $pid_path -f $config_path -D
+}
+
+function reloadhaproxy {
+  if [[ -s $pid_path ]]; then
+    haproxy -p $pid_path -f $config_path -D -sf $(cat $pid_path)
+  else
+    echo "Pid file $pid_path does't exist or is empty."
+  fi
+}
+
+function stophaproxy {
+  if [[ -s $pid_path ]]; then
+    kill -TERM `cat $pid_path`
+    kill_return=$?
+    rm -f $pid_path
+    exit $kill_return
+  else
+    echo "Pid file $pid_path does't exist or is empty."
+    exit 1
+  fi
+}
+
+pid_path=$1
+config_path=$2
+starthaproxy $pid_path $config_path
+
+trap "reloadhaproxy" SIGHUP
+trap "stophaproxy" EXIT
+
+while true; do
+  sleep 0.2
+done
